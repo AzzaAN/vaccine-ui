@@ -1,0 +1,96 @@
+<mat-tab-group dynamicHeight>
+  <mat-tab label="Records">
+    <div class="row mt-2">
+      <div class="col-12 align-self-start">
+        <mat-card>
+
+          <mat-card-header class="" style="display:inherit">
+            <mat-card-title>Your Children's Records</mat-card-title>
+          </mat-card-header>
+
+          <mat-card-content>
+
+            <div class="row text-left justify-content-md-center">
+              <div class="col-10">
+                <mat-accordion class="example-headers-align">
+                  <mat-expansion-panel *ngFor="let record of records" hideToggle>
+                    <mat-expansion-panel-header>
+                      <mat-panel-title>
+                        {{record.name}}
+                      </mat-panel-title>
+                      <mat-panel-description>
+                        {{record.childGender}}
+                        <mat-icon>face</mat-icon>
+                      </mat-panel-description>
+                    </mat-expansion-panel-header>
+                    <div class="row text-left">
+                      <div class="col-12">
+                        <mat-list>
+                          <mat-list-item *ngFor="let detail of details" (click)="detailDialog()">
+                            <mat-icon mat-list-icon>assignment</mat-icon>
+                            <p mat-line>{{detail.name}}</p>
+                            <p mat-line class="text-secondary">{{detail.age}}</p>
+                          </mat-list-item>
+                        </mat-list>
+                      </div>
+                    </div>
+                  </mat-expansion-panel>
+                </mat-accordion>
+              </div>
+            </div>
+
+          </mat-card-content>
+
+        </mat-card>
+      </div>
+    </div>
+  </mat-tab>
+  <mat-tab label="Permissions">
+    <div class="row justify-content-md-center mt-2 align-items-center">
+      <div class="col-12 text-center">
+        <mat-card>
+
+          <mat-card-header class="text-center" style="display:inherit">
+            <mat-card-title>Create New Vaccine Record</mat-card-title>
+          </mat-card-header>
+
+          <mat-card-content>
+            <div class="row text-left justify-content-md-center">
+              <div class="col-10">
+                <mat-accordion class="example-headers-align">
+                  <mat-expansion-panel *ngFor="let record of records" hideToggle>
+                    <mat-expansion-panel-header>
+                      <mat-panel-title>
+                        {{record.name}}
+                      </mat-panel-title>
+                      <mat-panel-description>
+                        {{record.childGender}}
+                        <mat-icon>face</mat-icon>
+                      </mat-panel-description>
+                    </mat-expansion-panel-header>
+                    <mat-form-field>
+                      <input matInput placeholder="Hospital Username" value="Hospital1">
+                    </mat-form-field>
+                    <mat-form-field>
+                      <input matInput placeholder="School Username" value="School1">
+                    </mat-form-field>
+
+                    <mat-form-field>
+                      <input matInput placeholder="Insurance Username" value="">
+                    </mat-form-field>
+
+                    <mat-action-row>
+                      <button mat-button color="primary" (click)="openSnackBar()">Submit</button>
+                    </mat-action-row>
+                  </mat-expansion-panel>
+                </mat-accordion>
+              </div>
+            </div>
+
+          </mat-card-content>
+
+        </mat-card>
+      </div>
+    </div>
+  </mat-tab>
+</mat-tab-group>

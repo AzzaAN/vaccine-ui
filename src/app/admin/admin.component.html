@@ -1,0 +1,217 @@
+<mat-tab-group dynamicHeight>
+  <mat-tab label="Participant">
+    <div class="row justify-content-md-center mt-2 align-items-center">
+      <div class="col-12 text-center">
+        <mat-card>
+
+          <mat-card-header class="text-center" style="display:inherit">
+            <mat-card-title>Create New Participant</mat-card-title>
+          </mat-card-header>
+
+          <mat-card-content>
+            <div class="row justify-content-md-center">
+              <div class="col-10">
+                <mat-form-field class="col-12">
+                  <mat-select placeholder="Participant's type"  [(ngModel)]="participant.type">
+                    <mat-option value="{{participants.Family}}">{{participants.Family}}</mat-option>
+                    <mat-option value="{{participants.Family}}">{{participants.Hospital}}</mat-option>
+                    <mat-option value="{{participants.Doctor}}">{{participants.Doctor}}</mat-option>
+                    <mat-option value="{{participants.Physician}}">{{participants.Physician}}</mat-option>
+                    <mat-option value="{{participants.School}}">{{participants.School}}</mat-option>
+                    <mat-option value="{{participants.Insurance}}">{{participants.Insurance}}</mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+            </div>
+
+            <div class="row justify-content-md-center">
+              <div class="col-10">
+                <mat-form-field class="col-12" [hideRequiredMarker]="options.value.hideRequired"
+                  [floatLabel]="options.value.floatLabel">
+                  <input [(ngModel)]="participant.username" matInput placeholder="Username" required>
+                </mat-form-field>
+              </div>
+            </div>
+
+            <div class="row justify-content-md-center">
+              <div class="col-10">
+                <mat-form-field class="col-12" [hideRequiredMarker]="options.value.hideRequired"
+                  [floatLabel]="options.value.floatLabel">
+                  <input [(ngModel)]="participant.fullname" matInput placeholder="Full name" required>
+                </mat-form-field>
+              </div>
+            </div>
+
+            <div class="row justify-content-md-center mb-2">
+              <div class="col-10">
+                <mat-form-field class="col-12" [hideRequiredMarker]="options.value.hideRequired"
+                  [floatLabel]="options.value.floatLabel">
+                  <input [(ngModel)]="participant.participantId" matInput placeholder="ID number" required>
+                </mat-form-field>
+              </div>
+            </div>
+
+            <div class="row justify-content-md-center mb-2" *ngIf="participant.type == participants.Doctor || participant.type == participants.Physician">
+                <div class="col-10">
+                  <mat-form-field class="col-12" [hideRequiredMarker]="options.value.hideRequired"
+                    [floatLabel]="options.value.floatLabel">
+                    <input [(ngModel)]="participant.hospital" matInput placeholder="Hospital Username" required>
+                  </mat-form-field>
+                </div>
+              </div>
+          </mat-card-content>
+
+          <mat-card-actions>
+            <button mat-stroked-button (click)="register()">Submit</button>
+          </mat-card-actions>
+
+        </mat-card>
+      </div>
+    </div>
+  </mat-tab>
+  <mat-tab label="Record">
+    <div class="row justify-content-md-center mt-2 align-items-center">
+      <div class="col-12 text-center">
+        <mat-card>
+
+          <mat-card-header class="text-center" style="display:inherit">
+            <mat-card-title>Create New Vaccine Record</mat-card-title>
+          </mat-card-header>
+
+          <mat-card-content>
+            <div class="row justify-content-md-center">
+              <div class="col-10">
+                <mat-form-field class="col-12" [hideRequiredMarker]="options.value.hideRequired"
+                  [floatLabel]="options.value.floatLabel">
+                  <input [(ngModel)]="record.family" matInput placeholder="Family's username" required>
+                </mat-form-field>
+              </div>
+            </div>
+
+            <div class="row justify-content-md-center">
+              <div class="col-10">
+                <mat-form-field class="col-12" [hideRequiredMarker]="options.value.hideRequired"
+                  [floatLabel]="options.value.floatLabel">
+                  <input [(ngModel)]="record.childName" matInput placeholder="Child name" required>
+                </mat-form-field>
+              </div>
+            </div>
+
+            <div class="row justify-content-md-center mb-2">
+              <div class="col-10">
+                <mat-form-field class="col-12" [hideRequiredMarker]="options.value.hideRequired"
+                  [floatLabel]="options.value.floatLabel">
+                  <mat-select [(ngModel)]="record.childGender" placeholder="Child's Gender">
+                    <mat-option value="male">Male</mat-option>
+                    <mat-option value="female">Female</mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+            </div>
+
+            <div class="row justify-content-md-center mb-2">
+              <div class="col-10">
+                <mat-form-field class="col-12" [hideRequiredMarker]="options.value.hideRequired"
+                  [floatLabel]="options.value.floatLabel">
+                  <input matInput [matDatepicker]="dp" placeholder="Child's Birth Date" (click)="dp.open()"
+                    (dateChange)="childBirthDate($event)">
+                  <mat-datepicker-toggle matSuffix [for]="dp"></mat-datepicker-toggle>
+                  <mat-datepicker #dp disabled="false"></mat-datepicker>
+                </mat-form-field>
+              </div>
+            </div>
+
+          </mat-card-content>
+
+          <mat-card-actions>
+            <button mat-stroked-button (click)="createRecord()">Submit</button>
+          </mat-card-actions>
+
+        </mat-card>
+      </div>
+    </div>
+  </mat-tab>
+  <mat-tab class="align-self-start" label="History">
+    <div class="row mt-2">
+      <div class="col-12 align-self-start">
+        <mat-card>
+
+          <mat-card-header class="" style="display:inherit">
+            <mat-card-title>History of Vaccine Detail</mat-card-title>
+          </mat-card-header>
+
+          <mat-card-content>
+
+            <div class="row justify-content-md-center">
+              <div class="col-10">
+                <mat-form-field class="col-12" [hideRequiredMarker]="options.value.hideRequired"
+                  [floatLabel]="options.value.floatLabel">
+                  <input [(ngModel)]="historyFamilyUsername" type="text" placeholder="Family's username" aria-label="Number" matInput
+                    [formControl]="myControl" [matAutocomplete]="auto">
+                  <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
+                    <mat-option *ngFor="let option of filteredOptions | async" [value]="option">
+                      {{option}}
+                    </mat-option>
+                  </mat-autocomplete>
+                </mat-form-field>
+              </div>
+            </div>
+
+            <div class="row justify-content-md-center mb-4">
+              <div class="col-10">
+                <button mat-stroked-button>Search</button>
+              </div>
+            </div>
+
+            <div class="row text-left justify-content-md-center">
+              <div class="col-10">
+                <p class="text-secondary mb-1 ml-1">Alnssayan</p>
+                <mat-accordion class="example-headers-align">
+                  <mat-expansion-panel *ngFor="let record of records" hideToggle>
+                    <mat-expansion-panel-header>
+                      <mat-panel-title>
+                        {{record.name}}
+                      </mat-panel-title>
+                      <mat-panel-description>
+                        {{record.childGender}}
+                        <mat-icon>face</mat-icon>
+                      </mat-panel-description>
+                    </mat-expansion-panel-header>
+
+                    <mat-accordion class="example-headers-align">
+                      <mat-expansion-panel *ngFor="let detail of details" hideToggle>
+                        <mat-expansion-panel-header>
+                          <mat-panel-title>
+                            {{detail.name}}
+                          </mat-panel-title>
+                          <mat-panel-description>
+                            {{detail.age}}
+                            <mat-icon>assignment</mat-icon>
+                          </mat-panel-description>
+                        </mat-expansion-panel-header>
+
+                        <div class="row text-left">
+                          <div class="col-12">
+                            <mat-list>
+                              <mat-list-item *ngFor="let detailHistory of detailHistories" (click)="history()">
+                                <mat-icon mat-list-icon>history</mat-icon>
+                                <p mat-line></p>
+                                <p mat-line class="text-secondary">{{detailHistory}}</p>
+                              </mat-list-item>
+                            </mat-list>
+                          </div>
+                        </div>
+                      </mat-expansion-panel>
+                    </mat-accordion>
+                  </mat-expansion-panel>
+                </mat-accordion>
+              </div>
+            </div>
+
+          </mat-card-content>
+
+        </mat-card>
+      </div>
+    </div>
+  </mat-tab>
+</mat-tab-group>

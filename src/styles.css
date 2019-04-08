@@ -1,0 +1,28 @@
+/* You can add global styles to this file, and also import other style files */
+@import "~@angular/material/prebuilt-themes/indigo-pink.css";
+.mat-list-icon {
+    color: rgba(0, 0, 0, 0.54);
+}
+.mat-list-item:hover{
+    background-color: rgba(176, 176, 176, 0.187);
+    cursor: pointer;
+}
+.example-headers-align .mat-expansion-panel-header-title,
+.example-headers-align .mat-expansion-panel-header-description {
+  flex-basis: 0;
+}
+
+.example-headers-align .mat-expansion-panel-header-description {
+  justify-content: space-between;
+  align-items: center;
+}
+.snack-success .mat-simple-snackbar-action{
+  color: #6076ff;
+}
+
+.snack-fail .mat-simple-snackbar-action{
+  color: #ff5151;
+}
+mat-form-field {
+  margin-right: 12px;
+}

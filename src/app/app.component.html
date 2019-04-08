@@ -1,0 +1,22 @@
+<div class="container">
+  <div class="row justify-content-md-center">
+    <div class="col-12 text-left">
+        <mat-toolbar >
+            <span>Child Vaccines Project</span>
+            <!-- This fills the remaining space of the current row -->
+            <span class="example-fill-remaining-space"></span>
+            <button *ngIf="isLoggedin" mat-button color="warn" class="logout" (click)="logout()">Log out</button>
+            <!-- <span>Right Aligned Text</span> -->
+          </mat-toolbar>
+    </div>
+  </div>
+  <div class="row justify-content-md-center mt-1">
+    <div class="col-12 text-center">
+      <mat-progress-bar *ngIf="isLoading"
+        [color]="color"
+        [mode]="mode">
+    </mat-progress-bar>
+      <router-outlet></router-outlet>
+    </div>
+  </div>
+</div>

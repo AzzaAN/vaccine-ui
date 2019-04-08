@@ -1,0 +1,24 @@
+.app-name-bg{
+    background-color: rgba(176, 176, 176, 0.187);
+}
+
+.example-fill-remaining-space {
+    /* This fills the remaining space, by using flexbox. 
+       Every toolbar row uses a flexbox row layout. */
+    flex: 1 1 auto;
+  }
+
+  mat-toolbar{
+    background: #00897b;
+    color: hsla(0,0%,100%,.87);
+    box-shadow: 0 4px 4px 0 rgba(0,0,0,.24)
+  }
+  .logout{
+    color: hsla(0,0%,100%,.87);
+    font-size: 0.85rem !important;
+    text-decoration: underline;
+  }
+
+  .mat-button-focus-overlay {
+    background-color: transparent!important;
+}

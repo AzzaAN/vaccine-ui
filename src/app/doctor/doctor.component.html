@@ -1,0 +1,97 @@
+<div class="row mt-2">
+  <div class="col-12 align-self-start">
+    <mat-card>
+
+      <mat-card-header class="" style="display:inherit">
+        <mat-card-title>Search for Vaccine Record</mat-card-title>
+      </mat-card-header>
+
+      <mat-card-content>
+
+        <div class="row justify-content-md-center">
+          <div class="col-10">
+            <mat-form-field class="col-12" [hideRequiredMarker]="options.value.hideRequired"
+              [floatLabel]="options.value.floatLabel">
+              <input type="text" placeholder="Family's username" aria-label="Number" matInput [formControl]="myControl"
+                [matAutocomplete]="auto">
+              <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
+                <mat-option *ngFor="let option of filteredOptions | async" [value]="option">
+                  {{option}}
+                </mat-option>
+              </mat-autocomplete>
+            </mat-form-field>
+          </div>
+        </div>
+
+        <div class="row justify-content-md-center mb-4">
+          <div class="col-10">
+            <button mat-stroked-button (click)="openSnackBar()">Search</button>
+          </div>
+        </div>
+
+        <div *ngIf="true" class="row text-left justify-content-md-center">
+          <div class="col-10">
+            <p class="text-secondary mb-1 ml-1">Alnssayan</p>
+            <mat-accordion class="example-headers-align">
+              <mat-expansion-panel *ngFor="let record of records" hideToggle>
+                <mat-expansion-panel-header>
+                  <mat-panel-title>
+                    {{record.name}}
+                  </mat-panel-title>
+                  <mat-panel-description>
+                    {{record.childGender}}
+                    <mat-icon>face</mat-icon>
+                  </mat-panel-description>
+                </mat-expansion-panel-header>
+
+                <mat-accordion class="example-headers-align">
+                  <mat-expansion-panel *ngFor="let detail of details" hideToggle>
+                    <mat-expansion-panel-header>
+                      <mat-panel-title>
+                        {{detail.name}}
+                      </mat-panel-title>
+                      <mat-panel-description>
+                        {{detail.age}}
+                        <mat-icon>assignment</mat-icon>
+                      </mat-panel-description>
+                    </mat-expansion-panel-header>
+                    <mat-form-field>
+                      <input matInput placeholder="Vaccine Name" value="Chickenpox" disabled>
+                    </mat-form-field>
+                    <mat-form-field>
+                      <input matInput placeholder="Child Age" value="5 months" disabled>
+                    </mat-form-field>
+                    <mat-form-field>
+                      <input matInput placeholder="Child Weight" value="20 kg" disabled>
+                    </mat-form-field>
+                    <mat-form-field>
+                      <input matInput placeholder="Child Height" value="32 cm" disabled>
+                    </mat-form-field>
+                    <mat-form-field>
+                      <input matInput placeholder="Child Temperature" value="27 c&deg;" disabled>
+                    </mat-form-field>
+                    <mat-form-field>
+                      <input matInput placeholder="Doctor Username" value="Khalid" disabled>
+                    </mat-form-field>
+                    <mat-form-field>
+                      <input matInput placeholder="Physician Username" value="Layla" disabled>
+                    </mat-form-field>
+                    <mat-form-field class="col-12 pl-0">
+                      <textarea matInput placeholder="Note" value="The vaccine against pneumococcus bacteria is targeted at the 13 most widespread strains of pneumococcus bacteria in children." [disabled]="!isAuth"></textarea>
+                    </mat-form-field>
+
+                    <mat-action-row *ngIf="isAuth">
+                      <button mat-button color="primary" (click)="openSnackBar()">Submit</button>
+                    </mat-action-row>
+                  </mat-expansion-panel>
+                </mat-accordion>
+              </mat-expansion-panel>
+            </mat-accordion>
+          </div>
+        </div>
+
+      </mat-card-content>
+
+    </mat-card>
+  </div>
+</div>
