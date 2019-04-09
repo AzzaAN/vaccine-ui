@@ -65,10 +65,10 @@
                       <input matInput placeholder="Child Temperature" value="{{detail._childTemperature }} c&deg;" disabled>
                     </mat-form-field>
                     <mat-form-field class="col-12 pl-0">
-                      <textarea matInput placeholder="Note" [(ngModel)]="detail._note" value="{{detail._note}}" [disabled]="doctorId != detail._doc"></textarea>
+                      <textarea matInput placeholder="Note" [(ngModel)]="detail._note" value="{{detail._note}}" [disabled]="doctorId != detail._doc || detail._signed"></textarea>
                     </mat-form-field>
 
-                    <mat-action-row *ngIf="doctorId == detail._doc">
+                    <mat-action-row *ngIf="doctorId == detail._doc && !detail._signed">
                       <button [disabled]="isLoading" mat-button color="primary" (click)="note(detail._id, detail._note)">Submit</button>
                     </mat-action-row>
                   </mat-expansion-panel>

@@ -135,7 +135,6 @@ export class FamilyComponent implements OnInit {
         history: detail
       }
     });
-
   }
 
   openSnackBar(msg, action, colorClass) {

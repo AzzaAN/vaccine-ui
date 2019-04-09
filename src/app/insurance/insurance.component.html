@@ -43,7 +43,7 @@
                   <div class="row text-left">
                     <div class="col-12">
                       <mat-list>
-                        <mat-list-item *ngFor="let detail of record._vaccineDetails" (click)="detailDialog()">
+                        <mat-list-item *ngFor="let detail of record._vaccineDetails" (click)="showDetail(detail)">
                           <mat-icon mat-list-icon>assignment</mat-icon>
                           <p mat-line>{{detail._vaccineName }}</p>
                           <p mat-line class="text-secondary">{{detail._childAge }}</p>

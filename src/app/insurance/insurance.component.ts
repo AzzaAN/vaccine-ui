@@ -114,4 +114,13 @@ export class InsuranceComponent implements OnInit {
     });
   }
 
+  showDetail(detail){
+    this.dialog.open(DetailDialogComponent, {
+      width:"800px",
+      data: {
+        history: detail
+      }
+    });
+  }
+
 }
