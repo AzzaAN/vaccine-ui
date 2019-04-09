@@ -12,7 +12,7 @@
           <div class="col-10">
             <mat-form-field class="col-12" [hideRequiredMarker]="options.value.hideRequired"
               [floatLabel]="options.value.floatLabel">
-              <input type="text" placeholder="Family's username" aria-label="Number" matInput [formControl]="myControl"
+              <input type="text" placeholder="Family's username" aria-label="Number" matInput [(ngModel)]="familyUsername"
                 [matAutocomplete]="auto">
               <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
                 <mat-option *ngFor="let option of filteredOptions | async" [value]="option">
@@ -25,62 +25,50 @@
 
         <div class="row justify-content-md-center mb-4">
           <div class="col-10">
-            <button mat-stroked-button (click)="openSnackBar()">Search</button>
+            <button mat-stroked-button (click)="getRecordClick()">Search</button>
           </div>
         </div>
 
         <div *ngIf="true" class="row text-left justify-content-md-center">
           <div class="col-10">
-            <p class="text-secondary mb-1 ml-1">Alnssayan</p>
+            <p class="text-secondary mb-1 ml-1" *ngIf="isFamily">{{familyUsername}}</p>
             <mat-accordion class="example-headers-align">
               <mat-expansion-panel *ngFor="let record of records" hideToggle>
                 <mat-expansion-panel-header>
                   <mat-panel-title>
-                    {{record.name}}
+                      {{record._childName}}
                   </mat-panel-title>
                   <mat-panel-description>
-                    {{record.childGender}}
+                      {{record._childGender}}
                     <mat-icon>face</mat-icon>
                   </mat-panel-description>
                 </mat-expansion-panel-header>
 
                 <mat-accordion class="example-headers-align">
-                  <mat-expansion-panel *ngFor="let detail of details" hideToggle>
+                  <mat-expansion-panel *ngFor="let detail of record._vaccineDetails" hideToggle>
                     <mat-expansion-panel-header>
                       <mat-panel-title>
-                        {{detail.name}}
+                          {{detail._vaccineName }}
                       </mat-panel-title>
                       <mat-panel-description>
-                        {{detail.age}}
+                          {{detail._childAge }}
                         <mat-icon>assignment</mat-icon>
                       </mat-panel-description>
                     </mat-expansion-panel-header>
                     <mat-form-field>
-                      <input matInput placeholder="Vaccine Name" value="Chickenpox" disabled>
+                      <input matInput placeholder="Child Weight" value="{{detail._childAge }}" disabled>
                     </mat-form-field>
                     <mat-form-field>
-                      <input matInput placeholder="Child Age" value="5 months" disabled>
+                      <input matInput placeholder="Child Height" value="{{detail._childAge }}" disabled>
                     </mat-form-field>
                     <mat-form-field>
-                      <input matInput placeholder="Child Weight" value="20 kg" disabled>
-                    </mat-form-field>
-                    <mat-form-field>
-                      <input matInput placeholder="Child Height" value="32 cm" disabled>
-                    </mat-form-field>
-                    <mat-form-field>
-                      <input matInput placeholder="Child Temperature" value="27 c&deg;" disabled>
-                    </mat-form-field>
-                    <mat-form-field>
-                      <input matInput placeholder="Doctor Username" value="Khalid" disabled>
-                    </mat-form-field>
-                    <mat-form-field>
-                      <input matInput placeholder="Physician Username" value="Layla" disabled>
+                      <input matInput placeholder="Child Temperature" value="{{detail._childAge }}" disabled>
                     </mat-form-field>
                     <mat-form-field class="col-12 pl-0">
-                      <textarea matInput placeholder="Note" value="The vaccine against pneumococcus bacteria is targeted at the 13 most widespread strains of pneumococcus bacteria in children." [disabled]="!isAuth"></textarea>
+                      <textarea matInput placeholder="Note" value="{{detail._childAge }}" [disabled]="doctorId != detail._doc"></textarea>
                     </mat-form-field>
 
-                    <mat-action-row *ngIf="isAuth">
+                    <mat-action-row *ngIf="doctorId == detail._doc">
                       <button mat-button color="primary" (click)="openSnackBar()">Submit</button>
                     </mat-action-row>
                   </mat-expansion-panel>

@@ -36,10 +36,11 @@ export class LoginComponent implements OnInit {
     .subscribe(data => {
       console.log(data);
       this._appService.setSession(this.username, data);
-      this._appService.getRout();
-      
+      this._appService.setLogin(true);
+
       this._appService.setLoading(false);
-      this.openSnackBar('Authorization succeeded', 'OK', 'snack-success');
+      this.openSnackBar('Authentication succeeded', 'OK', 'snack-success');
+      this._appService.getRout();
     },
       error => {
         console.log(error);
@@ -57,12 +58,12 @@ export class LoginComponent implements OnInit {
     });
   }
 
-  test(){
-    console.log(this.options);
-    this.isLoading = !this.isLoading;
-    this._appService.setLogin(true);
-    this._appService.setLoading(this.isLoading);
-  }
+  // test(){
+  //   console.log(this.options);
+  //   this.isLoading = !this.isLoading;
+  //   this._appService.setLogin(true);
+  //   this._appService.setLoading(this.isLoading);
+  // }
 
   get username(){
     return this.options.controls.username.value;

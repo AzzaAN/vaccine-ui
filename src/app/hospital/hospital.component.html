@@ -14,7 +14,7 @@
                 <mat-form-field class="col-12" [hideRequiredMarker]="options.value.hideRequired"
                   [floatLabel]="options.value.floatLabel">
                   <input type="text" placeholder="Family's username" aria-label="Number" matInput
-                    [formControl]="myControl" [matAutocomplete]="auto">
+                    [(ngModel)]="familyUsername" [matAutocomplete]="auto">
                   <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
                     <mat-option *ngFor="let option of filteredOptions | async" [value]="option">
                       {{option}}
@@ -26,48 +26,51 @@
 
             <div class="row justify-content-md-center mb-4">
               <div class="col-10">
-                <button mat-stroked-button (click)="openSnackBar()">Search</button>
+                <button mat-stroked-button (click)="getRecordClick()">Search</button>
               </div>
             </div>
 
             <div class="row text-left justify-content-md-center">
               <div class="col-10">
-                <p class="text-secondary mb-1 ml-1">Alnssayan</p>
+                <p class="text-secondary mb-1 ml-1" *ngIf="isFamily">{{familyUsername}}</p>
                 <mat-accordion class="example-headers-align">
                   <mat-expansion-panel *ngFor="let record of records" hideToggle>
                     <mat-expansion-panel-header>
                       <mat-panel-title>
-                        {{record.name}}
+                        {{record._childName}}
                       </mat-panel-title>
                       <mat-panel-description>
-                        {{record.childGender}}
+                        {{record._childGender}}
                         <mat-icon>face</mat-icon>
                       </mat-panel-description>
                     </mat-expansion-panel-header>
                     <mat-form-field>
-                      <input matInput placeholder="Vaccine Name">
+                      <input matInput [(ngModel)]="detail.vaccineName" placeholder="Vaccine Name">
                     </mat-form-field>
                     <mat-form-field>
-                      <input matInput placeholder="Child Weight">
+                      <input matInput [(ngModel)]="detail.childWeight" placeholder="Child Weight">
                       <span matSuffix>.kg</span>
                     </mat-form-field>
                     <mat-form-field>
-                      <input matInput placeholder="Child Height">
+                      <input matInput [(ngModel)]="detail.childHeight" placeholder="Child Height">
                       <span matSuffix>.cm</span>
                     </mat-form-field>
                     <mat-form-field>
-                      <input matInput placeholder="Child Temperature">
+                      <input matInput [(ngModel)]="detail.childTemperature" placeholder="Child Temperature">
                       <span matSuffix>.c&deg;</span>
                     </mat-form-field>
                     <mat-form-field>
-                      <input matInput placeholder="Doctor Username">
+                        <input matInput [(ngModel)]="detail.childAge" placeholder="Child Age">
+                      </mat-form-field>
+                    <mat-form-field>
+                      <input matInput [(ngModel)]="doctorUsername" placeholder="Doctor Username">
                     </mat-form-field>
                     <mat-form-field>
-                      <input matInput placeholder="Physician Username">
+                      <input matInput [(ngModel)]="physicianUsername" placeholder="Physician Username">
                     </mat-form-field>
 
                     <mat-action-row>
-                      <button mat-button color="primary" (click)="openSnackBar()">Submit</button>
+                      <button mat-button color="primary" (click)="createDetailClick(record._id)">Submit</button>
                     </mat-action-row>
                   </mat-expansion-panel>
                 </mat-accordion>
@@ -96,7 +99,7 @@
                 <mat-form-field class="col-12" [hideRequiredMarker]="options.value.hideRequired"
                   [floatLabel]="options.value.floatLabel">
                   <input type="text" placeholder="Family's username" aria-label="Number" matInput
-                    [formControl]="myControl" [matAutocomplete]="auto">
+                    [(ngModel)]="familyUsername_history" [matAutocomplete]="auto">
                   <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
                     <mat-option *ngFor="let option of filteredOptions | async" [value]="option">
                       {{option}}
@@ -108,13 +111,13 @@
 
             <div class="row justify-content-md-center mb-4">
               <div class="col-10">
-                <button mat-stroked-button (click)="openSnackBar()">Search</button>
+                <button mat-stroked-button (click)="getRecordClick()" [disabled]="isLoading">Search</button>
               </div>
             </div>
 
             <div class="row text-left justify-content-md-center">
               <div class="col-10">
-                <p class="text-secondary mb-1 ml-1">Alnssayan</p>
+                <p class="text-secondary mb-1 ml-1" *ngIf="isFamily_history">{{familyUsername_history}}</p>
                 <mat-accordion class="example-headers-align">
                   <mat-expansion-panel *ngFor="let record of records" hideToggle>
                     <mat-expansion-panel-header>

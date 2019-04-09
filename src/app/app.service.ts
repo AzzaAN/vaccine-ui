@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 import { Participants } from './Participants';
 import { defaultIterableDiffers } from '@angular/core/src/change_detection/change_detection';
 import { HttpClient, HttpParams, HttpHeaders } from '@angular/common/http';
-import { Participant, Record } from './vaccine.model';
+import { Participant, Record, Detail } from './vaccine.model';
 import { BehaviorSubject } from 'rxjs';
 const currentUser = "currentUser";
 @Injectable({
@@ -30,16 +30,62 @@ export class AppService {
     this.isLoadingBS.next(isLoading);
   }
 
-  test2() {
-    let params = new HttpParams().set("recordId", "785fb2cd-4ff9-4f42-87eb-b0d4f9178921");
-    return this.http.get(this.URL + 'get-details', { params });
+  getRcords(username: string, type: Participants) {
+
+    console.log(username, type);
+    let params = new HttpParams().append("username", username).append("type", type);
+
+    return this.http.get(this.URL + 'get-records', { params });
+
   }
 
-  getParticipant(username: string) {
+  getDetails(recordId: string) {
 
-    let params = new HttpParams().set("username", username);
+    let params = new HttpParams().append("recordId", recordId);
 
+    return this.http.get(this.URL + 'get-details', { params });
+
+  }
+
+  getParticipant(username: string, type: Participants) {
+
+    let params = new HttpParams().append("username", username).append("type", type);
+    
+    console.log(params);
     return this.http.get(this.URL + 'get-participant', { params });
+
+  }
+
+  createDetail(recordId: string, record: Detail) {
+
+    let params = new HttpParams().append("recordId", recordId);
+
+    let body = {
+      id:"1",
+      vaccineName: record.vaccineName,
+    childAge: record.childAge,
+    childTemperature: record.childTemperature,
+    childWeight: record.childWeight,
+    childHeight: record.childHeight,
+    doc: record.doc,
+    physician: record.physician
+    };
+    let headers = new HttpHeaders().set('Content-Type', 'application/json');
+
+    return this.http.post(this.URL + 'create-detail', body, { params, headers });
+
+  }
+
+  recordPermission(recordId: string, participantId: string, type: Participants) {
+
+    let body = {
+      recordId:recordId,
+      participantId: participantId,
+      type: type
+    };
+    let headers = new HttpHeaders().set('Content-Type', 'application/json');
+
+    return this.http.post(this.URL + 'record-permission', body, { headers });
 
   }
 
@@ -65,7 +111,7 @@ export class AppService {
       username: participant.username,
       fullname: participant.fullname,
       participantId: participant.participantId,
-      hospital: participant.hospital || "none",
+      hospital: participant.hospital
     };
     let headers = new HttpHeaders().set('Content-Type', 'application/json');
 

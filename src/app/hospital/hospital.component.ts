@@ -8,6 +8,7 @@ import { MatDatepickerInputEvent, MatDialog, MatSnackBar } from '@angular/materi
 import { Moment } from 'moment';
 import { AppService } from '../app.service';
 import { DetailDialogComponent } from '../detail-dialog/detail-dialog.component';
+import { Record_fetch, Detail_fetch, Detail } from '../vaccine.model';
 export interface Record {
   name: string;
   childGender: string;
@@ -22,63 +23,76 @@ export interface Detail {
   styleUrls: ['./hospital.component.css']
 })
 export class HospitalComponent implements OnInit {
-  
 
-  records: Record[] = [
-    {
-      name: 'Ahmad',
-      childGender: "Male",
-    },
-    // {
-    //   name: 'Sarah',
-    //   childGender: "Female",
-    // }
-  ];
 
-  details: Detail[] = [
-    {
-      name: "BCG, Hepatitis B",
-      age: "At birth"
-    },
-    {
-      name: "IPV, Dtap",
-      age: "2 months."
-    },
-    {
-      name: "HIP, Rota, PVC",
-      age: "4 months."
-    }
-  ];
+  records: Record_fetch[];
+  details: Detail_fetch[];
+
+  detail = new Detail();
   detailHistories = ["01/05/2019", "12/11/2018", "07/05/2011", "22/12/2012"]
 
 
   participants = Participants;
   options: FormGroup;
-
-  constructor(fb: FormBuilder, private appService: AppService, public dialog: MatDialog,
-     private snackBar: MatSnackBar) {
+  isLoading: boolean = false;
+  familyUsername;
+  familyUsername_history;
+  isFamily = false;
+  doctorUsername;
+  physicianUsername;
+  constructor(fb: FormBuilder, private _appService: AppService, public dialog: MatDialog,
+    private snackBar: MatSnackBar) {
     this.options = fb.group({
       hideRequired: false,
       floatLabel: 'auto',
     });
   }
 
-  myControl = new FormControl();
-  families: string[] = ['One', 'Two', 'Three'];
-  filteredOptions: Observable<string[]>;
-
   ngOnInit() {
-    this.filteredOptions = this.myControl.valueChanges.pipe(
-      startWith(''),
-      map(value => this._filter(value))
-    );
-
+    this._appService.isLoading.subscribe(isLoading => this.isLoading = isLoading);
   }
 
-  private _filter(value: string): string[] {
-    const filterValue = value.toLowerCase();
+  getRecordClick() {
+    this._appService.setLoading(true);
+    this._appService.getParticipant(this.familyUsername, Participants.Family)
+      .subscribe(data => {
+        let p: any = data;
+        console.log(p.length ? "y" : "n");
 
-    return this.families.filter(option => option.toLowerCase().includes(filterValue));
+        if (p.length) {
+          this.getRecords();
+        } else {
+          this._appService.setLoading(false);
+          this.openSnackBar(Participants.Family + " username not found", 'Dismiss', 'snack-fail');
+          return;
+        }
+      },
+        error => {
+          console.log(error);
+          this._appService.setLoading(false);
+          this.openSnackBar(error.error.responses[0].error.message, 'Dismiss', 'snack-fail');
+          return;
+        });
+  }
+
+  getRecords() {
+    this._appService.getRcords(this.familyUsername, Participants.Hospital)
+      .subscribe(data => {
+        this.records = data as Record_fetch[];
+        this.isFamily = true;
+        if (!this.records.length) {
+          this.isFamily = false;
+          this.openSnackBar("Unauthorized to any records by this family", 'Dismiss', 'snack-fail');
+        }
+        console.log(this.records);
+        this._appService.setLoading(false);
+      },
+        error => {
+          console.log(error);
+          this._appService.setLoading(false);
+          this.openSnackBar(error.error.responses[0].error.message, 'Dismiss', 'snack-fail');
+          return;
+        });
   }
 
   detailDialog(name) {
@@ -103,13 +117,74 @@ export class HospitalComponent implements OnInit {
     });
   }
 
-  createDetail(){
+  createDetailClick(recordId: string) {
+    ///////////////// record RESET!!
 
+    this._appService.setLoading(true);
+    this._appService.getParticipant(this.doctorUsername, Participants.Doctor)
+      .subscribe(data => {
+        let p: any = data;
+        console.log(p.length ? "y" : "n");
+
+        if (p.length) {
+          this.checkPhysician(p[0]._id, recordId);
+        } else {
+          this._appService.setLoading(false);
+          this.openSnackBar(Participants.Doctor+" username not found", 'Dismiss', 'snack-fail');
+          return;
+        }
+      },
+        error => {
+          console.log(error);
+          this._appService.setLoading(false);
+          this.openSnackBar(error.error.responses[0].error.message, 'Dismiss', 'snack-fail');
+          return;
+        });
   }
 
-  openSnackBar() {
-    this.snackBar.open('Detail created Successfully', 'OK', {
-      //duration: 2000,
+  checkPhysician(doctorId:string, recordId: string){
+    this._appService.getParticipant(this.physicianUsername, Participants.Physician)
+      .subscribe(data => {
+        let p: any = data;
+        console.log(p.length ? "y" : "n");
+
+        if (p.length) {
+          this.createDetail(recordId, doctorId, p[0]._id);
+        } else {
+          this._appService.setLoading(false);
+          this.openSnackBar(Participants.Physician+" username not found", 'Dismiss', 'snack-fail');
+          return;
+        }
+      },
+        error => {
+          console.log(error);
+          this._appService.setLoading(false);
+          this.openSnackBar(error.error.responses[0].error.message, 'Dismiss', 'snack-fail');
+          return;
+        });
+  }
+
+  createDetail(recordId: string, doctorId:string, physicianId:string) {
+    this.detail.doc = doctorId;
+    this.detail.physician = physicianId;
+    console.log(this.detail);
+    this._appService.createDetail(recordId, this.detail)
+    .subscribe(data => {
+      console.log(data);
+      this._appService.setLoading(false);
+      this.openSnackBar('Record created Successfully', 'OK', 'snack-success');
+    },
+      error => {
+        console.log(error);
+        this._appService.setLoading(false);
+        this.openSnackBar(error.error.responses[0].error.message, 'Dismiss', 'snack-fail');
+      });
+  }
+
+  openSnackBar(msg, action, colorClass) {
+    this.snackBar.open(msg, action, {
+      duration: 2000,
+      panelClass: colorClass
     });
   }
 

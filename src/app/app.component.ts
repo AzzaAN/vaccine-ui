@@ -22,11 +22,11 @@ export class AppComponent implements OnInit{
   ngOnInit(): void {
     this._appService.isLoggedin.subscribe(isLoggedin => this.isLoggedin = isLoggedin);
     this._appService.isLoading.subscribe(isLoading => this.isLoading = isLoading);
+    this.isLoggedin = this._appService.checkLogin();
   }
 
   logout(){
     this._appService.logout();
     this.isLoggedin = false;
-    //this.isLoading = false;
   }
 }

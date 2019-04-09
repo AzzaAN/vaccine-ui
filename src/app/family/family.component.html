@@ -16,20 +16,20 @@
                   <mat-expansion-panel *ngFor="let record of records" hideToggle>
                     <mat-expansion-panel-header>
                       <mat-panel-title>
-                        {{record.name}}
+                        {{record._childName}}
                       </mat-panel-title>
                       <mat-panel-description>
-                        {{record.childGender}}
+                        {{record._childGender}}
                         <mat-icon>face</mat-icon>
                       </mat-panel-description>
                     </mat-expansion-panel-header>
                     <div class="row text-left">
                       <div class="col-12">
                         <mat-list>
-                          <mat-list-item *ngFor="let detail of details" (click)="detailDialog()">
+                          <mat-list-item *ngFor="let detail of record._vaccineDetails" (click)="detailDialog()">
                             <mat-icon mat-list-icon>assignment</mat-icon>
-                            <p mat-line>{{detail.name}}</p>
-                            <p mat-line class="text-secondary">{{detail.age}}</p>
+                            <p mat-line>{{detail._vaccineName }}</p>
+                            <p mat-line class="text-secondary">{{detail._childAge }}</p>
                           </mat-list-item>
                         </mat-list>
                       </div>
@@ -61,27 +61,46 @@
                   <mat-expansion-panel *ngFor="let record of records" hideToggle>
                     <mat-expansion-panel-header>
                       <mat-panel-title>
-                        {{record.name}}
+                        {{record._childName}}
                       </mat-panel-title>
                       <mat-panel-description>
-                        {{record.childGender}}
+                        {{record._childGender}}
                         <mat-icon>face</mat-icon>
                       </mat-panel-description>
                     </mat-expansion-panel-header>
-                    <mat-form-field>
-                      <input matInput placeholder="Hospital Username" value="Hospital1">
-                    </mat-form-field>
-                    <mat-form-field>
-                      <input matInput placeholder="School Username" value="School1">
-                    </mat-form-field>
-
-                    <mat-form-field>
-                      <input matInput placeholder="Insurance Username" value="">
-                    </mat-form-field>
-
-                    <mat-action-row>
-                      <button mat-button color="primary" (click)="openSnackBar()">Submit</button>
-                    </mat-action-row>
+                    <div class="row text-left">
+                      <div class="col-10">
+                        <mat-form-field class="col-12">
+                          <input matInput [(ngModel)]="hospital_permission" placeholder="Hospital Username"
+                            value="">
+                        </mat-form-field>
+                      </div>
+                      <div class="col-2 mt-3">
+                        <button mat-button color="primary" (click)="givePermission(record._id, hospital_permission, participants.Hospital)" [disabled]="isLoading">Submit</button>
+                      </div>
+                    </div>
+                    <div class="row text-left">
+                      <div class="col-10">
+                        <mat-form-field class="col-12">
+                          <input matInput [(ngModel)]="school_permission" placeholder="School Username"
+                            value="">
+                        </mat-form-field>
+                      </div>
+                      <div class="col-2 mt-3">
+                        <button mat-button color="primary" (click)="givePermission(record._id, school_permission, participants.School)" [disabled]="isLoading">Submit</button>
+                      </div>
+                    </div>
+                    <div class="row text-left">
+                      <div class="col-10">
+                        <mat-form-field class="col-12">
+                          <input matInput [(ngModel)]="insurance_permission" placeholder="Insurance Username"
+                            value="">
+                        </mat-form-field>
+                      </div>
+                      <div class="col-2 mt-3">
+                        <button mat-button color="primary" (click)="givePermission(record._id, insurance_permission, participants.Insurance)" [disabled]="isLoading">Submit</button>
+                      </div>
+                    </div>
                   </mat-expansion-panel>
                 </mat-accordion>
               </div>

@@ -3,68 +3,70 @@
     <div class="row justify-content-md-center mt-2 align-items-center">
       <div class="col-12 text-center">
         <mat-card>
+          <form [formGroup]="registerGroup" (ngSubmit)="register()">
+            <mat-card-header class="text-center" style="display:inherit">
+              <mat-card-title>Create New Participant</mat-card-title>
+            </mat-card-header>
 
-          <mat-card-header class="text-center" style="display:inherit">
-            <mat-card-title>Create New Participant</mat-card-title>
-          </mat-card-header>
-
-          <mat-card-content>
-            <div class="row justify-content-md-center">
-              <div class="col-10">
-                <mat-form-field class="col-12">
-                  <mat-select placeholder="Participant's type"  [(ngModel)]="participant.type">
-                    <mat-option value="{{participants.Family}}">{{participants.Family}}</mat-option>
-                    <mat-option value="{{participants.Family}}">{{participants.Hospital}}</mat-option>
-                    <mat-option value="{{participants.Doctor}}">{{participants.Doctor}}</mat-option>
-                    <mat-option value="{{participants.Physician}}">{{participants.Physician}}</mat-option>
-                    <mat-option value="{{participants.School}}">{{participants.School}}</mat-option>
-                    <mat-option value="{{participants.Insurance}}">{{participants.Insurance}}</mat-option>
-                  </mat-select>
-                </mat-form-field>
-              </div>
-            </div>
-
-            <div class="row justify-content-md-center">
-              <div class="col-10">
-                <mat-form-field class="col-12" [hideRequiredMarker]="options.value.hideRequired"
-                  [floatLabel]="options.value.floatLabel">
-                  <input [(ngModel)]="participant.username" matInput placeholder="Username" required>
-                </mat-form-field>
-              </div>
-            </div>
-
-            <div class="row justify-content-md-center">
-              <div class="col-10">
-                <mat-form-field class="col-12" [hideRequiredMarker]="options.value.hideRequired"
-                  [floatLabel]="options.value.floatLabel">
-                  <input [(ngModel)]="participant.fullname" matInput placeholder="Full name" required>
-                </mat-form-field>
-              </div>
-            </div>
-
-            <div class="row justify-content-md-center mb-2">
-              <div class="col-10">
-                <mat-form-field class="col-12" [hideRequiredMarker]="options.value.hideRequired"
-                  [floatLabel]="options.value.floatLabel">
-                  <input [(ngModel)]="participant.participantId" matInput placeholder="ID number" required>
-                </mat-form-field>
-              </div>
-            </div>
-
-            <div class="row justify-content-md-center mb-2" *ngIf="participant.type == participants.Doctor || participant.type == participants.Physician">
+            <mat-card-content>
+              <div class="row justify-content-md-center">
                 <div class="col-10">
-                  <mat-form-field class="col-12" [hideRequiredMarker]="options.value.hideRequired"
-                    [floatLabel]="options.value.floatLabel">
-                    <input [(ngModel)]="participant.hospital" matInput placeholder="Hospital Username" required>
+                  <mat-form-field class="col-12">
+                    <mat-select placeholder="Participant's type" formControlName="type"
+                      (selectionChange)="onTypeChange($event)">
+                      <mat-option value="{{participants.Family}}">{{participants.Family}}</mat-option>
+                      <mat-option value="{{participants.Hospital}}">{{participants.Hospital}}</mat-option>
+                      <mat-option value="{{participants.Doctor}}">{{participants.Doctor}}</mat-option>
+                      <mat-option value="{{participants.Physician}}">{{participants.Physician}}</mat-option>
+                      <mat-option value="{{participants.School}}">{{participants.School}}</mat-option>
+                      <mat-option value="{{participants.Insurance}}">{{participants.Insurance}}</mat-option>
+                    </mat-select>
                   </mat-form-field>
                 </div>
               </div>
-          </mat-card-content>
 
-          <mat-card-actions>
-            <button mat-stroked-button (click)="register()">Submit</button>
-          </mat-card-actions>
+              <div class="row justify-content-md-center">
+                <div class="col-10">
+                  <mat-form-field class="col-12" [hideRequiredMarker]="registerGroup.value.hideRequired"
+                    [floatLabel]="registerGroup.value.floatLabel">
+                    <input formControlName="username" matInput placeholder="Username" required>
+                  </mat-form-field>
+                </div>
+              </div>
 
+              <div class="row justify-content-md-center">
+                <div class="col-10">
+                  <mat-form-field class="col-12" [hideRequiredMarker]="registerGroup.value.hideRequired"
+                    [floatLabel]="registerGroup.value.floatLabel">
+                    <input formControlName="fullname" matInput placeholder="Full name" required>
+                  </mat-form-field>
+                </div>
+              </div>
+
+              <div class="row justify-content-md-center mb-2">
+                <div class="col-10">
+                  <mat-form-field class="col-12" [hideRequiredMarker]="registerGroup.value.hideRequired"
+                    [floatLabel]="registerGroup.value.floatLabel">
+                    <input formControlName="participantId" matInput placeholder="ID number" required>
+                  </mat-form-field>
+                </div>
+              </div>
+
+              <div class="row justify-content-md-center mb-2"
+                *ngIf="type_register == participants.Doctor || type_register == participants.Physician">
+                <div class="col-10">
+                  <mat-form-field class="col-12" [hideRequiredMarker]="registerGroup.value.hideRequired"
+                    [floatLabel]="registerGroup.value.floatLabel">
+                    <input formControlName="hospital" matInput placeholder="Hospital Username" required>
+                  </mat-form-field>
+                </div>
+              </div>
+            </mat-card-content>
+
+            <mat-card-actions>
+              <button mat-stroked-button [disabled]="isLoading">Submit</button>
+            </mat-card-actions>
+          </form>
         </mat-card>
       </div>
     </div>
@@ -73,60 +75,60 @@
     <div class="row justify-content-md-center mt-2 align-items-center">
       <div class="col-12 text-center">
         <mat-card>
+          <form [formGroup]="recordGroup" (ngSubmit)="createRecordClick()">
+            <mat-card-header class="text-center" style="display:inherit">
+              <mat-card-title>Create New Vaccine Record</mat-card-title>
+            </mat-card-header>
 
-          <mat-card-header class="text-center" style="display:inherit">
-            <mat-card-title>Create New Vaccine Record</mat-card-title>
-          </mat-card-header>
-
-          <mat-card-content>
-            <div class="row justify-content-md-center">
-              <div class="col-10">
-                <mat-form-field class="col-12" [hideRequiredMarker]="options.value.hideRequired"
-                  [floatLabel]="options.value.floatLabel">
-                  <input [(ngModel)]="record.family" matInput placeholder="Family's username" required>
-                </mat-form-field>
+            <mat-card-content>
+              <div class="row justify-content-md-center">
+                <div class="col-10">
+                  <mat-form-field class="col-12" [hideRequiredMarker]="options.value.hideRequired"
+                    [floatLabel]="options.value.floatLabel">
+                    <input formControlName="family" matInput placeholder="Family's username" required>
+                  </mat-form-field>
+                </div>
               </div>
-            </div>
 
-            <div class="row justify-content-md-center">
-              <div class="col-10">
-                <mat-form-field class="col-12" [hideRequiredMarker]="options.value.hideRequired"
-                  [floatLabel]="options.value.floatLabel">
-                  <input [(ngModel)]="record.childName" matInput placeholder="Child name" required>
-                </mat-form-field>
+              <div class="row justify-content-md-center">
+                <div class="col-10">
+                  <mat-form-field class="col-12" [hideRequiredMarker]="options.value.hideRequired"
+                    [floatLabel]="options.value.floatLabel">
+                    <input formControlName="childName" matInput placeholder="Child name" required>
+                  </mat-form-field>
+                </div>
               </div>
-            </div>
 
-            <div class="row justify-content-md-center mb-2">
-              <div class="col-10">
-                <mat-form-field class="col-12" [hideRequiredMarker]="options.value.hideRequired"
-                  [floatLabel]="options.value.floatLabel">
-                  <mat-select [(ngModel)]="record.childGender" placeholder="Child's Gender">
-                    <mat-option value="male">Male</mat-option>
-                    <mat-option value="female">Female</mat-option>
-                  </mat-select>
-                </mat-form-field>
+              <div class="row justify-content-md-center mb-2">
+                <div class="col-10">
+                  <mat-form-field class="col-12" [hideRequiredMarker]="options.value.hideRequired"
+                    [floatLabel]="options.value.floatLabel">
+                    <mat-select formControlName="childGender" placeholder="Child's Gender">
+                      <mat-option value="Male">Male</mat-option>
+                      <mat-option value="Female">Female</mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
               </div>
-            </div>
 
-            <div class="row justify-content-md-center mb-2">
-              <div class="col-10">
-                <mat-form-field class="col-12" [hideRequiredMarker]="options.value.hideRequired"
-                  [floatLabel]="options.value.floatLabel">
-                  <input matInput [matDatepicker]="dp" placeholder="Child's Birth Date" (click)="dp.open()"
-                    (dateChange)="childBirthDate($event)">
-                  <mat-datepicker-toggle matSuffix [for]="dp"></mat-datepicker-toggle>
-                  <mat-datepicker #dp disabled="false"></mat-datepicker>
-                </mat-form-field>
+              <div class="row justify-content-md-center mb-2">
+                <div class="col-10">
+                  <mat-form-field class="col-12" [hideRequiredMarker]="options.value.hideRequired"
+                    [floatLabel]="options.value.floatLabel">
+                    <input formControlName="childBirthDate" matInput [matDatepicker]="dp" placeholder="Child's Birth Date" (click)="dp.open()"
+                      (dateChange)="childBirthDateChange($event)">
+                    <mat-datepicker-toggle matSuffix [for]="dp"></mat-datepicker-toggle>
+                    <mat-datepicker #dp disabled="false"></mat-datepicker>
+                  </mat-form-field>
+                </div>
               </div>
-            </div>
 
-          </mat-card-content>
+            </mat-card-content>
 
-          <mat-card-actions>
-            <button mat-stroked-button (click)="createRecord()">Submit</button>
-          </mat-card-actions>
-
+            <mat-card-actions>
+              <button mat-stroked-button [disabled]="isLoading">Submit</button>
+            </mat-card-actions>
+          </form>
         </mat-card>
       </div>
     </div>
@@ -146,8 +148,8 @@
               <div class="col-10">
                 <mat-form-field class="col-12" [hideRequiredMarker]="options.value.hideRequired"
                   [floatLabel]="options.value.floatLabel">
-                  <input [(ngModel)]="historyFamilyUsername" type="text" placeholder="Family's username" aria-label="Number" matInput
-                    [formControl]="myControl" [matAutocomplete]="auto">
+                  <input [(ngModel)]="historyFamilyUsername" type="text" placeholder="Family's username"
+                    aria-label="Number" matInput [formControl]="myControl" [matAutocomplete]="auto">
                   <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
                     <mat-option *ngFor="let option of filteredOptions | async" [value]="option">
                       {{option}}
