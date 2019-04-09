@@ -64,7 +64,7 @@
             </mat-card-content>
 
             <mat-card-actions>
-              <button mat-stroked-button [disabled]="isLoading">Submit</button>
+              <button [disabled]="isLoading" mat-stroked-button >Submit</button>
             </mat-card-actions>
           </form>
         </mat-card>
@@ -126,7 +126,7 @@
             </mat-card-content>
 
             <mat-card-actions>
-              <button mat-stroked-button [disabled]="isLoading">Submit</button>
+              <button [disabled]="isLoading" mat-stroked-button >Submit</button>
             </mat-card-actions>
           </form>
         </mat-card>
@@ -161,33 +161,33 @@
 
             <div class="row justify-content-md-center mb-4">
               <div class="col-10">
-                <button mat-stroked-button>Search</button>
+                <button [disabled]="isLoading" mat-stroked-button (click)="getRecordClick()">Search</button>
               </div>
             </div>
 
             <div class="row text-left justify-content-md-center">
               <div class="col-10">
-                <p class="text-secondary mb-1 ml-1">Alnssayan</p>
+                <p class="text-secondary mb-1 ml-1" *ngIf="isFamily">{{historyFamilyUsername}}</p>
                 <mat-accordion class="example-headers-align">
                   <mat-expansion-panel *ngFor="let record of records" hideToggle>
                     <mat-expansion-panel-header>
                       <mat-panel-title>
-                        {{record.name}}
+                          {{record._childName}}
                       </mat-panel-title>
                       <mat-panel-description>
-                        {{record.childGender}}
+                          {{record._childGender}}
                         <mat-icon>face</mat-icon>
                       </mat-panel-description>
                     </mat-expansion-panel-header>
 
                     <mat-accordion class="example-headers-align">
-                      <mat-expansion-panel *ngFor="let detail of details" hideToggle>
+                      <mat-expansion-panel *ngFor="let detail of record._vaccineDetails" hideToggle>
                         <mat-expansion-panel-header>
                           <mat-panel-title>
-                            {{detail.name}}
+                              {{detail._vaccineName }}
                           </mat-panel-title>
                           <mat-panel-description>
-                            {{detail.age}}
+                              {{detail._childAge }}
                             <mat-icon>assignment</mat-icon>
                           </mat-panel-description>
                         </mat-expansion-panel-header>
@@ -195,10 +195,10 @@
                         <div class="row text-left">
                           <div class="col-12">
                             <mat-list>
-                              <mat-list-item *ngFor="let detailHistory of detailHistories" (click)="history()">
+                              <mat-list-item *ngFor="let history of detail._history" (click)="showHistory(history)">
                                 <mat-icon mat-list-icon>history</mat-icon>
                                 <p mat-line></p>
-                                <p mat-line class="text-secondary">{{detailHistory}}</p>
+                                <p mat-line class="text-secondary">{{history.timestamp.low * 1000 | date: 'dd/MM/yyyy'}}</p>
                               </mat-list-item>
                             </mat-list>
                           </div>

@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 import { Participants } from './Participants';
 import { defaultIterableDiffers } from '@angular/core/src/change_detection/change_detection';
 import { HttpClient, HttpParams, HttpHeaders } from '@angular/common/http';
-import { Participant, Record, Detail } from './vaccine.model';
+import { Participant, Record, Detail, Detail_fetch } from './vaccine.model';
 import { BehaviorSubject } from 'rxjs';
 const currentUser = "currentUser";
 @Injectable({
@@ -47,6 +47,14 @@ export class AppService {
 
   }
 
+  getDetail_history(detailId: string) {
+
+    let params = new HttpParams().append("detailId", detailId);
+
+    return this.http.get(this.URL + 'detail-history', { params });
+
+  }
+
   getParticipant(username: string, type: Participants) {
 
     let params = new HttpParams().append("username", username).append("type", type);
@@ -86,6 +94,33 @@ export class AppService {
     let headers = new HttpHeaders().set('Content-Type', 'application/json');
 
     return this.http.post(this.URL + 'record-permission', body, { headers });
+
+  }
+
+  physicianSign(detail: Detail_fetch) {
+
+    let body = {
+      detailId:detail._id,
+      signed:true,
+      nextVisit: detail._nextVisit,
+      remainingVaccines:detail._remainingVaccines
+    };
+    console.log(body);
+    let headers = new HttpHeaders().set('Content-Type', 'application/json');
+
+    return this.http.post(this.URL + 'physician-sign', body, { headers });
+
+  }
+
+  detailNote(detailId: string, note:string) {
+
+    let body = {
+      detailId:detailId,
+      note: note
+    };
+    let headers = new HttpHeaders().set('Content-Type', 'application/json');
+
+    return this.http.post(this.URL + 'doctor-note', body, { headers });
 
   }
 

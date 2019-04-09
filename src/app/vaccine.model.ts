@@ -24,7 +24,7 @@ export class Detail {
 }
 
 export class Record_fetch {
-    _id:string;
+    _id: string;
     _family: string;
     _childName: string;
     _childBirthDate?: string;
@@ -36,7 +36,7 @@ export class Record_fetch {
 }
 
 export class Detail_fetch {
-    _id:string;
+    _id: string;
     _vaccineName: string;
     _childAge: string;
     _childTemperature: string;
@@ -48,6 +48,17 @@ export class Detail_fetch {
     _signed?: boolean;
     _nextVisit?: string;
     _remainingVaccines?: string;
+    _history?:Detail_history[];
+}
+
+export class Detail_history {
+    txId: string;
+    value: Detail_fetch;
+    timestamp: {
+        low: 1554790467,
+        high: 0,
+        unsigned: false
+    }
 }
 
 export class Participant {

@@ -5,7 +5,7 @@
             <span>Child Vaccines Project</span>
             <!-- This fills the remaining space of the current row -->
             <span class="example-fill-remaining-space"></span>
-            <button *ngIf="isLoggedin" mat-button color="warn" class="logout" (click)="logout()">Log out</button>
+            <button [disabled]="isLoading" *ngIf="isLoggedin" mat-button color="warn" class="logout" (click)="logout()">Log out</button>
             <!-- <span>Right Aligned Text</span> -->
           </mat-toolbar>
     </div>

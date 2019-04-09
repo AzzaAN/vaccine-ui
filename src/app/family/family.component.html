@@ -26,7 +26,7 @@
                     <div class="row text-left">
                       <div class="col-12">
                         <mat-list>
-                          <mat-list-item *ngFor="let detail of record._vaccineDetails" (click)="detailDialog()">
+                          <mat-list-item *ngFor="let detail of record._vaccineDetails" (click)="showDetail(detail)">
                             <mat-icon mat-list-icon>assignment</mat-icon>
                             <p mat-line>{{detail._vaccineName }}</p>
                             <p mat-line class="text-secondary">{{detail._childAge }}</p>
@@ -51,7 +51,7 @@
         <mat-card>
 
           <mat-card-header class="text-center" style="display:inherit">
-            <mat-card-title>Create New Vaccine Record</mat-card-title>
+            <mat-card-title>Records Permissions</mat-card-title>
           </mat-card-header>
 
           <mat-card-content>
@@ -76,7 +76,7 @@
                         </mat-form-field>
                       </div>
                       <div class="col-2 mt-3">
-                        <button mat-button color="primary" (click)="givePermission(record._id, hospital_permission, participants.Hospital)" [disabled]="isLoading">Submit</button>
+                        <button [disabled]="isLoading" mat-button color="primary" (click)="givePermission(record._id, hospital_permission, participants.Hospital)" >Submit</button>
                       </div>
                     </div>
                     <div class="row text-left">
@@ -87,7 +87,7 @@
                         </mat-form-field>
                       </div>
                       <div class="col-2 mt-3">
-                        <button mat-button color="primary" (click)="givePermission(record._id, school_permission, participants.School)" [disabled]="isLoading">Submit</button>
+                        <button [disabled]="isLoading" mat-button color="primary" (click)="givePermission(record._id, school_permission, participants.School)" >Submit</button>
                       </div>
                     </div>
                     <div class="row text-left">
@@ -98,7 +98,7 @@
                         </mat-form-field>
                       </div>
                       <div class="col-2 mt-3">
-                        <button mat-button color="primary" (click)="givePermission(record._id, insurance_permission, participants.Insurance)" [disabled]="isLoading">Submit</button>
+                        <button [disabled]="isLoading" mat-button color="primary" (click)="givePermission(record._id, insurance_permission, participants.Insurance)" >Submit</button>
                       </div>
                     </div>
                   </mat-expansion-panel>

@@ -1,60 +1,86 @@
-<h2 mat-dialog-title>Chickenpox    21/10/2018</h2>
+<h2 mat-dialog-title>Vaccine Detail Informations </h2>
 <mat-dialog-content class="mat-typography">
+    <div *ngIf="data.history.txId">
+        <div class="row ">
+          <div class="col">
+            <h5 class="mb-0 mt-3 text-secondary">Transaction ID</h5>
+          </div>
+        </div>
+        <div class="row ">
+          <div class="col">
+            <p><code>{{data.history.txId}}</code></p>
+          </div>
+        </div>
+      </div>
+  <div class="row ">
+    <div class="col">
+      <h5 class="mb-0 mt-3 text-secondary">Vaccine Name</h5>
+    </div>
+  </div>
+  <div class="row ">
+    <div class="col">
+      <p>{{data.history._vaccineName || data.history.value._vaccineName }} </p>
+    </div>
+  </div>
   <div class="row ">
     <div class="col">
       <h5 class="mb-0 mt-3 text-secondary">Child Information</h5>
     </div>
   </div>
   <div class="row ">
-    <div class="col-4">
-      <p>Age: 1 year, 12 months, and 20 days</p>
+    <div class="col-3">
+      <p>Age: {{data.history._childAge || data.history.value._childAge }} </p>
     </div>
-    <div class="col-2">
-      <p>Temperature: 27 c&deg;</p>
-    </div>
-    <div class="col-2">
-      <p>Weight: 20 kg</p>
-    </div>
-    <div class="col-2">
-      <p>Height: 50 cm</p>
-    </div>
-  </div>
-
-  <div class="row ">
     <div class="col">
-      <h5 class="mb-0 mt-3 text-secondary">Doctor's note</h5>
+      <p>Temperature: {{data.history._childTemperature || data.history.value._childTemperature }} c&deg;</p>
     </div>
   </div>
   <div class="row ">
+    <div class="col-3">
+      <p>Weight: {{data.history._childWeight || data.history.value._childWeight}} kg</p>
+    </div>
     <div class="col">
-      <p>Achieve the maximum speed possible on the Web Platform today, and take it further, via Web
-        Workers and server-side rendering. Angular puts you in control over scalability. Meet huge
-        data requirements by building data models on RxJS, Immutable.js or another push-model.</p>
+      <p>Height: {{data.history._childHeight || data.history.value._childHeight}} cm</p>
     </div>
   </div>
-
-  <div class="row ">
-    <div class="col">
-      <h5 class="mb-0 mt-3 text-secondary">Next visit</h5>
-    </div>
-  </div>
-  <div class="row ">
+  <div *ngIf="data.history.value? data.history.value._note : data.history._note">
+    <div class="row ">
       <div class="col">
-        <p class="mb-0">19/03/2019</p>
+        <h5 class="mb-0 mt-3 text-secondary">Doctor's note</h5>
       </div>
     </div>
-
-  <div class="row ">
-    <div class="col">
-      <h5 class="mb-0 mt-3 text-secondary">Remaining vaccines</h5>
+    <div class="row ">
+      <div class="col">
+        <p>{{data.history._note || data.history.value._note}}</p>
+      </div>
     </div>
   </div>
-  <div class="row ">
-    <div class="col">
-        <p class="mb-0">Diphtheria,tetanus, and whooping cough</p>
+  <div *ngIf="data.history.value? data.history.value._nextVisit : data.history._nextVisit">
+    <div class="row ">
+      <div class="col">
+        <h5 class="mb-0 mt-3 text-secondary">Next visit</h5>
+      </div>
+    </div>
+    <div class="row ">
+      <div class="col">
+        <p class="mb-0">{{data.history._nextVisit || data.history.value._nextVisit}} </p>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="data.history.value? data.history.value._remainingVaccines : data.history._remainingVaccines">
+    <div class="row ">
+      <div class="col">
+        <h5 class="mb-0 mt-3 text-secondary">Remaining vaccines</h5>
+      </div>
+    </div>
+    <div class="row ">
+      <div class="col">
+        <p class="mb-0">{{data.history._remainingVaccines ||data.history.value._remainingVaccines}} </p>
+      </div>
     </div>
   </div>
 </mat-dialog-content>
 <mat-dialog-actions align="end">
-  <button mat-button mat-dialog-close>OK</button>
+  <button [disabled]="isLoading" mat-button mat-dialog-close>OK</button>
 </mat-dialog-actions>

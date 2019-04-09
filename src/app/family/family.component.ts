@@ -84,17 +84,6 @@ export class FamilyComponent implements OnInit {
 
   }
 
-  detailDialog(name) {
-    console.log("history " + name);
-    this.dialog.open(DetailDialogComponent, {
-      // height: '400px',
-      // width: '600px',
-      data: {
-        vaccineName: 'Chickenpox'
-      }
-    });
-  }
-
   givePermission(recordId, participantUsername:string, type: Participants) {
 
     console.log(participantUsername, type);
@@ -138,6 +127,16 @@ export class FamilyComponent implements OnInit {
       });
   }
 
+
+  showDetail(detail){
+    this.dialog.open(DetailDialogComponent, {
+      width:"800px",
+      data: {
+        history: detail
+      }
+    });
+
+  }
 
   openSnackBar(msg, action, colorClass) {
     this.snackBar.open(msg, action, {

@@ -25,12 +25,8 @@ export interface Detail {
 })
 export class DoctorComponent implements OnInit, AfterViewInit {
 
-
-  isAuth: boolean = false;
   records: Record_fetch[];
   details: Detail_fetch[];
-
-  detailHistories = ["01/05/2019", "12/11/2018", "07/05/2011", "22/12/2012"]
 
   participants = Participants;
   options: FormGroup;
@@ -68,16 +64,19 @@ export class DoctorComponent implements OnInit, AfterViewInit {
         });
   }
 
-
-  history(name) {
-    console.log("history " + name);
-    this.dialog.open(DetailDialogComponent, {
-      // height: '400px',
-      // width: '600px',
-      data: {
-        vaccineName: 'Chickenpox'
-      }
-    });
+  note(detailId:string, note:string){
+    this._appService.setLoading(true);
+    this._appService.detailNote(detailId, note)
+      .subscribe(data => {
+        this._appService.setLoading(false);
+          this.openSnackBar("Detail updated Successfully", 'OK', 'snack-success');
+      },
+        error => {
+          console.log(error);
+          this._appService.setLoading(false);
+          this.openSnackBar(error.error.responses[0].error.message, 'Dismiss', 'snack-fail');
+          return;
+        });
   }
   getRecordClick() {
     this._appService.setLoading(true);

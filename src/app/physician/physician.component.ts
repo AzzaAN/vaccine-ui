@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, AfterViewInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { FormControl } from '@angular/forms';
 import { Observable } from 'rxjs';
@@ -8,6 +8,7 @@ import { MatDatepickerInputEvent, MatDialog, MatSnackBar } from '@angular/materi
 import { Moment } from 'moment';
 import { AppService } from '../app.service';
 import { DetailDialogComponent } from '../detail-dialog/detail-dialog.component';
+import { Record_fetch, Detail_fetch } from '../vaccine.model';
 
 export interface Record {
   name: string;
@@ -22,79 +23,134 @@ export interface Detail {
   templateUrl: './physician.component.html',
   styleUrls: ['./physician.component.css']
 })
-export class PhysicianComponent implements OnInit {
+export class PhysicianComponent implements OnInit, AfterViewInit {
 
-  isAuth = true;
-  records: Record[] = [
-    {
-      name: 'Ahmad',
-      childGender: "Male",
-    },
-    // {
-    //   name: 'Sarah',
-    //   childGender: "Female",
-    // }
-  ];
-
-  details: Detail[] = [
-    {
-      name: "BCG, Hepatitis B",
-      age: "At birth"
-    },
-    {
-      name: "IPV, Dtap",
-      age: "2 months."
-    },
-    {
-      name: "HIP, Rota, PVC",
-      age: "4 months."
-    }
-  ];
-
+  records: Record_fetch[];
+  details: Detail_fetch[];
+  physicianId;
+  isLoading: boolean = false;
+  familyUsername;
+  isFamily = false;
   detailHistories = ["01/05/2019", "12/11/2018", "07/05/2011", "22/12/2012"]
 
   participants = Participants;
   options: FormGroup;
 
-  constructor(fb: FormBuilder, private appService: AppService, public dialog: MatDialog, private snackBar: MatSnackBar) {
+  constructor(fb: FormBuilder, private _appService: AppService, public dialog: MatDialog, private snackBar: MatSnackBar) {
     this.options = fb.group({
       hideRequired: false,
       floatLabel: 'auto',
     });
   }
 
-  myControl = new FormControl();
-  families: string[] = ['One', 'Two', 'Three'];
-  filteredOptions: Observable<string[]>;
-
   ngOnInit() {
-    this.filteredOptions = this.myControl.valueChanges.pipe(
-      startWith(''),
-      map(value => this._filter(value))
-    );
+    this._appService.isLoading.subscribe(isLoading => this.isLoading = isLoading);
+  }
+
+  ngAfterViewInit(): void {
+    this._appService.getParticipant(this._appService.getUsername(), Participants.Physician)
+      .subscribe(data => {
+        let p: any = data;
+        console.log(p.length ? "y" : "n");
+
+        if (p.length) {
+          this.physicianId = p[0]._id;
+        } else {
+          console.error("physicianId !!!");
+          return;
+        }
+      },
+        error => {
+          console.log(error);
+          return;
+        });
+  }
+
+  sign(detail:Detail_fetch){
+    console.log(detail);
+    this._appService.setLoading(true);
+    this._appService.physicianSign(detail)
+      .subscribe(data => {
+        this._appService.setLoading(false);
+          this.openSnackBar("Detail updated Successfully", 'OK', 'snack-success');
+          detail._signed = true;
+      },
+        error => {
+          console.log(error);
+          this._appService.setLoading(false);
+          this.openSnackBar(error.error.responses[0].error.message, 'Dismiss', 'snack-fail');
+          return;
+        });
+  }
+
+  getRecordClick() {
+    this._appService.setLoading(true);
+    this._appService.getParticipant(this.familyUsername, Participants.Family)
+      .subscribe(data => {
+        let p: any = data;
+        console.log(p.length ? "y" : "n");
+
+        if (p.length) {
+          this.getRecords();
+        } else {
+          this._appService.setLoading(false);
+          this.openSnackBar(Participants.Family + " username not found", 'Dismiss', 'snack-fail');
+          return;
+        }
+      },
+        error => {
+          console.log(error);
+          this._appService.setLoading(false);
+          this.openSnackBar(error.error.responses[0].error.message, 'Dismiss', 'snack-fail');
+          return;
+        });
+  }
+
+  getRecords() {
+    this._appService.getRcords(this.familyUsername, Participants.Physician)
+      .subscribe(data => {
+        this.records = data as Record_fetch[];
+        console.log(this.records);
+        this.isFamily = true;
+        if (!this.records.length) {
+          this.isFamily = false;
+          this._appService.setLoading(false);
+          this.openSnackBar("Unauthorized to any records by this family", 'Dismiss', 'snack-fail');
+          return;
+        }
+        this.getDetails();
+      },
+        error => {
+          console.log(error);
+          this._appService.setLoading(false);
+          this.openSnackBar(error.error.responses[0].error.message, 'Dismiss', 'snack-fail');
+          return;
+        });
+  }
+
+  getDetails() {
+    for (let i in this.records) {
+      console.log(this.records[i]);
+      this._appService.getDetails(this.records[i]._id)
+        .subscribe(data => {
+          this.records[i]._vaccineDetails = data as Detail_fetch[];
+          console.log(this.records);
+          this._appService.setLoading(false);
+        },
+          error => {
+            console.log(error);
+            this._appService.setLoading(false);
+            this.openSnackBar(error.error.responses[0].error.message, 'Dismiss', 'snack-fail');
+            return;
+          });
+    }
 
   }
 
-  private _filter(value: string): string[] {
-    const filterValue = value.toLowerCase();
-
-    return this.families.filter(option => option.toLowerCase().includes(filterValue));
-  }
-
-  history(name) {
-    console.log("history " + name);
-    this.dialog.open(DetailDialogComponent, {
-      // height: '400px',
-      // width: '600px',
-      data: {
-        vaccineName: 'Chickenpox'
-      }
-    });
-  }
-
-  openSnackBar() {
-    this.snackBar.open('Detail updated Successfully','OK', {
-      //duration: 2000,
+  openSnackBar(msg, action, colorClass) {
+    this.snackBar.open(msg, action, {
+      duration: 2000,
+      panelClass: colorClass
     });
   }
 

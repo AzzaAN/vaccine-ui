@@ -25,7 +25,7 @@
 
         <div class="row justify-content-md-center mb-4">
           <div class="col-10">
-            <button mat-stroked-button (click)="getRecordClick()">Search</button>
+            <button [disabled]="isLoading" mat-stroked-button (click)="getRecordClick()">Search</button>
           </div>
         </div>
 
@@ -56,20 +56,20 @@
                       </mat-panel-description>
                     </mat-expansion-panel-header>
                     <mat-form-field>
-                      <input matInput placeholder="Child Weight" value="{{detail._childAge }}" disabled>
+                      <input matInput placeholder="Child Weight" value="{{detail._childWeight }} kg" disabled>
                     </mat-form-field>
                     <mat-form-field>
-                      <input matInput placeholder="Child Height" value="{{detail._childAge }}" disabled>
+                      <input matInput placeholder="Child Height" value="{{detail._childHeight }} cm" disabled>
                     </mat-form-field>
                     <mat-form-field>
-                      <input matInput placeholder="Child Temperature" value="{{detail._childAge }}" disabled>
+                      <input matInput placeholder="Child Temperature" value="{{detail._childTemperature }} c&deg;" disabled>
                     </mat-form-field>
                     <mat-form-field class="col-12 pl-0">
-                      <textarea matInput placeholder="Note" value="{{detail._childAge }}" [disabled]="doctorId != detail._doc"></textarea>
+                      <textarea matInput placeholder="Note" [(ngModel)]="detail._note" value="{{detail._note}}" [disabled]="doctorId != detail._doc"></textarea>
                     </mat-form-field>
 
                     <mat-action-row *ngIf="doctorId == detail._doc">
-                      <button mat-button color="primary" (click)="openSnackBar()">Submit</button>
+                      <button [disabled]="isLoading" mat-button color="primary" (click)="note(detail._id, detail._note)">Submit</button>
                     </mat-action-row>
                   </mat-expansion-panel>
                 </mat-accordion>

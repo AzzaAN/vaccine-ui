@@ -8,7 +8,7 @@ import { MatDatepickerInputEvent, MatDialog, MatSnackBar } from '@angular/materi
 import { Moment } from 'moment';
 import { AppService } from '../app.service';
 import { DetailDialogComponent } from '../detail-dialog/detail-dialog.component';
-import { Participant, Record } from '../vaccine.model';
+import { Participant, Record, Record_fetch, Detail_fetch, Detail_history } from '../vaccine.model';
 
 export interface Record {
   name: string;
@@ -30,42 +30,14 @@ export class AdminComponent implements OnInit {
   participant = new Participant();
 
   record = new Record();
-
+  records: Record_fetch[];
   recordFamilyUsername;
   recordChildName;
   recordChildGender;
   recordChildBirthDate;
 
   historyFamilyUsername;
-
-
-
-
-  // records: Record[] = [
-  //   {
-  //     name: 'Ahmad',
-  //     childGender: "Male",
-  //   },
-  //   {
-  //     name: 'Sarah',
-  //     childGender: "Female",
-  //   }
-  // ];
-
-  // details: Detail[] = [
-  //   {
-  //     name: "BCG, Hepatitis B",
-  //     age: "At birth"
-  //   },
-  //   {
-  //     name: "IPV, Dtap",
-  //     age: "2 months."
-  //   },
-  //   {
-  //     name: "HIP, Rota, PVC",
-  //     age: "4 months."
-  //   }
-  // ];
+  isFamily = false;
 
   detailHistories = ["01/05/2017", "12/06/2018", "07/07/2018", "22/12/2018"]
 
@@ -186,13 +158,13 @@ export class AdminComponent implements OnInit {
         console.log(data);
         this.participant = new Participant();
         this._appService.setLoading(false);
-        this.openSnackBar('Participant registered Successfully', 'OK', 'snack-success');
+        this.openSnackBar(this.participant.type + ' registered Successfully', 'OK', 'snack-success');
       },
         error => {
           console.log(error);
           this._appService.setLoading(false);
           if (error.status == 200) {
-            this.openSnackBar('Participant registered Successfully', 'OK', 'snack-success');
+            this.openSnackBar(this.participant.type + ' registered Successfully', 'OK', 'snack-success');
             return;
           }
           this.openSnackBar(error.error.responses[0].error.message, 'Dismiss', 'snack-fail');
@@ -259,15 +231,6 @@ export class AdminComponent implements OnInit {
         });
   }
 
-  history(name) {
-    console.log("history " + name);
-    this.dialog.open(DetailDialogComponent, {
-      data: {
-        vaccineName: 'Chickenpox'
-      }
-    });
-  }
-
   childBirthDateChange(event: MatDatepickerInputEvent<Moment>) {
     try {
       this.childBirthDate = event.value.valueOf() + "";
@@ -283,6 +246,95 @@ export class AdminComponent implements OnInit {
     this.snackBar.open(msg, action, {
       duration: 2000,
       panelClass: colorClass
+    });
+  }
+
+  getRecordClick() {
+    this._appService.setLoading(true);
+    this._appService.getParticipant(this.historyFamilyUsername, Participants.Family)
+      .subscribe(data => {
+        let p: any = data;
+        console.log(p.length ? "y" : "n");
+
+        if (p.length) {
+          this.getRecords();
+        } else {
+          this._appService.setLoading(false);
+          this.openSnackBar(Participants.Family + " username not found", 'Dismiss', 'snack-fail');
+          return;
+        }
+      },
+        error => {
+          console.log(error);
+          this._appService.setLoading(false);
+          this.openSnackBar(error.error.responses[0].error.message, 'Dismiss', 'snack-fail');
+          return;
+        });
+  }
+
+  getRecords() {
+    this._appService.getRcords(this.historyFamilyUsername, Participants.Healthadmin)
+      .subscribe(data => {
+        this.records = data as Record_fetch[];
+        console.log(this.records);
+        this.isFamily = true;
+        if (!this.records.length) {
+          this.isFamily = false;
+          this._appService.setLoading(false);
+          this.openSnackBar("Unauthorized to any records by this family", 'Dismiss', 'snack-fail');
+          return;
+        }
+        this.getDetails();
+      },
+        error => {
+          console.log(error);
+          this._appService.setLoading(false);
+          this.openSnackBar(error.error.responses[0].error.message, 'Dismiss', 'snack-fail');
+          return;
+        });
+  }
+
+  getDetails() {
+    for (let i in this.records) {
+      console.log(this.records[i]);
+      this._appService.getDetails(this.records[i]._id)
+        .subscribe(data => {
+          this.records[i]._vaccineDetails = data as Detail_fetch[];
+          console.log(this.records);
+          this._appService.setLoading(false);
+          for (let j in this.records[i]._vaccineDetails) {
+            console.log(this.records[i]._vaccineDetails[j]);
+            this._appService.getDetail_history(this.records[i]._vaccineDetails[j]._id)
+              .subscribe(data => {
+                this.records[i]._vaccineDetails[j]._history = data as Detail_history[];
+                console.log(this.records[i]._vaccineDetails[j]._history);
+                
+              },
+                error => {
+                  console.log(error);
+                  this._appService.setLoading(false);
+                  this.openSnackBar(error.error.responses[0].error.message, 'Dismiss', 'snack-fail');
+                  return;
+                });
+          }
+        },
+          error => {
+            console.log(error);
+            this._appService.setLoading(false);
+            this.openSnackBar(error.error.responses[0].error.message, 'Dismiss', 'snack-fail');
+            return;
+          });
+    }
+
+  }
+
+  showHistory(history: Detail_history) {
+    console.log(history);
+    this.dialog.open(DetailDialogComponent, {
+      width:"800px",
+      data: {
+        history: history
+      }
     });
   }
 }
